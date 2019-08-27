@@ -35,11 +35,21 @@ public class Tabuleiro {
         }
         return false;
     }
+    private boolean validarDiagonal (String valor){
+        if(valor.equals(tabuleiro [0][0]) && valor.equals(tabuleiro[1][1])
+            && valor.equals(tabuleiro[2][2])){
+            return true;
+        }
+       if(valor.equals(tabuleiro [0][2]) && valor.equals(tabuleiro[1][1])
+            && valor.equals(tabuleiro[0][0])){
+            return true;
+    }
+       return false;
+    }
     
-    
-    
-    public boolean verificarVencedor(String valor){
-        return validarHorizontal(valor) || validarVertical(valor);
+            
+   public boolean verificarVencedor(String valor){
+        return validarHorizontal(valor) || validarVertical(valor) || validarDiagonal(valor);
     }
     
 }

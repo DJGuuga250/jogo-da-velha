@@ -57,6 +57,7 @@ public class Tela extends JFrame implements ActionListener{
         } 
         botoes[x][y].setText(texto);
         botoes[x][y].setFont(new Font ("Dialog",0, 75));
+        botoes[x][y].setEnabled(false);
         tabuleiro.adicionarJogada(x, y, texto);
         if(tabuleiro.verificarVencedor(texto)){
             JOptionPane.showMessageDialog(null,"Venceu o Jogador:" + texto);
