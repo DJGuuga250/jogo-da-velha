@@ -61,6 +61,7 @@ public class Tela extends JFrame implements ActionListener{
         tabuleiro.adicionarJogada(x, y, texto);
         if(tabuleiro.verificarVencedor(texto)){
             JOptionPane.showMessageDialog(null,"Venceu o Jogador:" + texto);
+            dispose();
         }
     }
     
