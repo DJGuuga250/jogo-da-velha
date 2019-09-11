@@ -39,7 +39,7 @@ public class BuscaEmProfundidade {
     if (!isObjetivo(verticeAtual)&& !verticeAtual.getTabuleiroEstado().isFimDeJogo()){
      Tabuleiro tabuleiroAtual = verticeAtual.getTabuleiroEstado();
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < 3; j++) {
                 if (tabuleiroAtual.isVazio(i, j)) {
                     Tabuleiro tabuleiroFilho = (Tabuleiro) tabuleiroAtual.clone();
                     tabuleiroFilho.adicionarJogada(i, j, text);
@@ -47,8 +47,7 @@ public class BuscaEmProfundidade {
                     verticeFilho.setVerticePai(verticeAtual);
                     verticeFilho.setJogadaText(text);
                     verticeFilho.setTabuleiroEstado(tabuleiroFilho);
-                    verticesFilhos.add(verticeFilho);
-                    
+                    verticesFilhos.add(verticeFilho);       
                 }
                 
             }
@@ -58,4 +57,24 @@ public class BuscaEmProfundidade {
     return verticesFilhos;
     
     }
+        public Vertice encontrarVerticeSolucao(Vertice verticeAtual) throws CloneNotSupportedException {
+
+                Stack<Vertice> pilha = new Stack<Vertice>();
+                pilha.push(verticeAtual);
+        // adicionar filhos a pilha e depois percorrer a pilha.
+        while (!pilha.isEmpty()){
+            verticeAtual = pilha.pop();
+
+                if (isObjetivo(verticeAtual)) {
+                    return verticeAtual;
+                }
+                List<Vertice> filhosVerticeAtual = gerarFilhos(verticeAtual);
+
+
+                for (Vertice filho : filhosVerticeAtual) {
+                    pilha.push(filho);
+                }
+        }
+        return null;
+}
 }

@@ -14,13 +14,19 @@ public class Tela extends JFrame implements ActionListener{
     int jogador = 1;
     Tabuleiro tabuleiro = new Tabuleiro();
     
+    int cordenadaYProximaJogadaIA;
+    int cordenadaXProximaJogadaIA;
+    
+    
 
     public Tela() {
         super("Jogo da Velha - Tec. Desenv. de jogos digitais");
+        this.setSize(800,800);
         this.setVisible(true);
         this.setLayout(new GridLayout(3,3));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setExtendedState(MAXIMIZED_BOTH);
+        tabuleiro.limparTabuleiro();
         
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -45,26 +51,74 @@ public class Tela extends JFrame implements ActionListener{
         }
     }
     public void jogar(int x, int y, int jogador) {
-        String texto;
+        String text = "O";
         
-        if( jogador == 1 ){
-            texto = "X";
-            this.jogador = 2;
-            
-        } else{
-            texto = "O";
-            this.jogador =1;
-        } 
-        botoes[x][y].setText(texto);
+        
+      tabuleiro.adicionarJogada(x, y, text);
+        botoes[x][y].setText(text);
         botoes[x][y].setFont(new Font ("Dialog",0, 75));
         botoes[x][y].setEnabled(false);
-        tabuleiro.adicionarJogada(x, y, texto);
-        if(tabuleiro.verificarVencedor(texto)){
-            JOptionPane.showMessageDialog(null,"Venceu o Jogador:" + texto);
+        tabuleiro.adicionarJogada(x, y, text);
+        if(tabuleiro.verificarVencedor(text)){
+            JOptionPane.showMessageDialog(null,"Venceu o Jogador:" + text);
             dispose();
         }
+        jogarIA(text);
     }
     
-    
-    
+     public Vertice selecionarProximaJogadaAPatirDoVerticeObjetivo(Vertice verticeObjetivo ){
+            Vertice verticeAux = verticeObjetivo;
+            Vertice verticeAnterior = null;
+            while(verticeAux.getVerticePai() != null){
+                verticeAnterior = verticeAux;
+                verticeAux = verticeAux.getVerticePai();
+            }
+            return verticeAnterior;
+        }
+        public void jogarIA(String jogadaHumana){
+            String text = "X";
+
+            if (tabuleiro.verificarVencedor(text)) {
+                JOptionPane.showConfirmDialog(null,"Vencedor é o Jogador :" + text);
+                dispose();
+            }
+            Vertice verticeEstadoAtual = new Vertice();
+             verticeEstadoAtual.setJogadaText(jogadaHumana);
+             verticeEstadoAtual.setTabuleiroEstado(this.tabuleiro);
+             BuscaEmProfundidade buscaEmProfundidade = new BuscaEmProfundidade();
+             try{
+
+
+                 Vertice verticeObjeto = buscaEmProfundidade.encontrarVerticeSolucao(verticeEstadoAtual);
+                 Vertice proximajogadaVertice = selecionarProximaJogadaAPatirDoVerticeObjetivo(verticeObjeto);
+                 setXYIA(proximajogadaVertice.getTabuleiroEstado(), verticeEstadoAtual.getTabuleiroEstado());
+                 
+                 tabuleiro.adicionarJogada(this.cordenadaXProximaJogadaIA, this.cordenadaYProximaJogadaIA, text);
+                 botoes[cordenadaXProximaJogadaIA][cordenadaYProximaJogadaIA].setText(text);
+                 botoes[cordenadaXProximaJogadaIA][cordenadaYProximaJogadaIA].setFont(new Font("Dialog",0,60));
+                 botoes[cordenadaXProximaJogadaIA][cordenadaYProximaJogadaIA].setEnabled(false);
+                 if(tabuleiro.verificarVencedor(text)){
+                     JOptionPane.showMessageDialog(null,"Vencedor é o Jogador : "+ text);
+                     dispose();
+                 }
+             }catch ( CloneNotSupportedException e){
+                 e.printStackTrace();
+             }
+     }
+        public void setXYIA(Tabuleiro proximoEstado, Tabuleiro estadoAtual){
+            String[][] tabuleiroProximoEstado = proximoEstado.getTabuleiro();
+            String[][] tabuleiroEstadoAtual = estadoAtual.getTabuleiro();
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (!tabuleiroEstadoAtual[i][j].equals(tabuleiroProximoEstado[i][j])) {
+                        this.cordenadaXProximaJogadaIA = i;
+                        this.cordenadaYProximaJogadaIA = j;
+                    }
+                    
+                }
+                
+            }
+        }
+     
 }
+

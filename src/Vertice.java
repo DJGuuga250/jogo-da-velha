@@ -31,7 +31,7 @@ public class Vertice {
         return tabuleiroEstado;
         
     }
-    public void setTabuleiroEstado(Tabuleiro TabuleiroEstado){
+    public void setTabuleiroEstado(Tabuleiro tabuleiroEstado){
         this.tabuleiroEstado = tabuleiroEstado;
     }
 //add vertices filhos a vertice atual
